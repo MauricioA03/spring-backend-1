@@ -38,6 +38,7 @@ public class CategoryServiceImplMockTest {
         Assert.assertEquals(result, categoryI);
     }
 
+    /*
     @Test
     public void testSave() {
         Category categoryI = new Category();
@@ -47,4 +48,5 @@ public class CategoryServiceImplMockTest {
         Category result = categoryServiceImpl.save(new Category());
         Assert.assertEquals(result, categoryI);
     }
+     */
 }
