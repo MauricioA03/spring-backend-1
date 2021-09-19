@@ -1,14 +1,12 @@
 /**
- * @author: Alex Yerson Gonzales Meneses.
+ * @author: Diego Marcelo Choque Ramirez
  */
 
-package com.sales.market.service.purchases;
+package com.sales.market.service;
 
 import com.sales.market.model.ItemInventory;
-
 import com.sales.market.repository.GenericRepository;
-import com.sales.market.repository.purchases.ItemInventoryRepository;
-import com.sales.market.service.GenericServiceImpl;
+import com.sales.market.repository.ItemInventoryRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,5 +20,13 @@ public class ItemInventoryServiceImpl extends GenericServiceImpl<ItemInventory> 
     @Override
     protected GenericRepository<ItemInventory> getRepository() {
         return repository;
+    }
+
+
+    @Override
+    public void checkInventory() {
+        for (ItemInventory item : repository.getMinItemInventories()) {
+            System.out.println(item.getItem().getName() + " itemInventory");
+        }
     }
 }

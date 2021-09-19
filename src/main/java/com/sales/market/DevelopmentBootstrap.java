@@ -27,9 +27,11 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
     private final SubCategoryService subCategoryService;
     private final ItemService itemService;
     private final ItemInstanceService itemInstanceService;
+    private final ItemInventoryService itemInventoryService;
     private EmployeeRepository employeeRepository;
     private UserService userService;
     private RoleService roleService;
+    private ItemInventoryServiceImpl itemInventoryServiceImp;
 
     SubCategory beverageSubCat = null;
 
@@ -37,14 +39,16 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
     // bean pueden tener muchos campos y otros beans asociados
 
 
-    public DevelopmentBootstrap(BuyRepository buyRepository, CategoryService categoryService,
-            SubCategoryService subCategoryService, ItemService itemService, ItemInstanceService itemInstanceService,
-            EmployeeRepository employeeRepository, UserService userService, RoleService roleService) {
+    public DevelopmentBootstrap(ItemInventoryServiceImpl itemInventoryServiceImp,BuyRepository buyRepository, CategoryService categoryService,
+                                SubCategoryService subCategoryService, ItemService itemService, ItemInstanceService itemInstanceService,
+                                ItemInventoryService itemInventoryService, EmployeeRepository employeeRepository, UserService userService, RoleService roleService) {
         this.buyRepository = buyRepository;
+        this.itemInventoryServiceImp = itemInventoryServiceImp;
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
         this.itemService = itemService;
         this.itemInstanceService = itemInstanceService;
+        this.itemInventoryService = itemInventoryService;
         this.employeeRepository = employeeRepository;
         this.userService = userService;
         this.roleService = roleService;
@@ -66,6 +70,7 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
         persistCategoriesAndSubCategories();
         Item maltinItem = persistItems(beverageSubCat);
         persistItemInstances(maltinItem);
+        createItemInventory(maltinItem);
         initializeRoles();
         initializeEmployees();
     }
@@ -74,6 +79,35 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
         createRole(RoleType.ADMIN.getId(), RoleType.ADMIN.getType());
         createRole(RoleType.GENERAL.getId(), RoleType.GENERAL.getType());
         createRole(RoleType.SUPERVISOR.getId(), RoleType.SUPERVISOR.getType());
+    }
+
+    private void createItemInventory(Item maltinItem) {
+        ItemInventory itemInventory = new ItemInventory();
+        itemInventory.setItem(maltinItem);
+        itemInventory.setLowerBoundThreshold(BigDecimal.TEN);
+        itemInventory.setUpperBoundThreshold(new BigDecimal("30"));
+        itemInventory.setStockQuantity(new BigDecimal("8"));
+        itemInventory.setTotalPrice(new BigDecimal("30"));
+        itemInventoryService.save(itemInventory);
+
+        ItemInventory itemInventory1 = new ItemInventory();
+        itemInventory1.setItem(maltinItem);
+        itemInventory1.setLowerBoundThreshold(BigDecimal.TEN);
+        itemInventory1.setUpperBoundThreshold(new BigDecimal("30"));
+        itemInventory1.setStockQuantity(new BigDecimal("15"));
+        itemInventory1.setTotalPrice(new BigDecimal("30"));
+        itemInventoryService.save(itemInventory1);
+
+        ItemInventory itemInventory2 = new ItemInventory();
+        itemInventory2.setItem(maltinItem);
+        itemInventory2.setLowerBoundThreshold(BigDecimal.TEN);
+        itemInventory2.setUpperBoundThreshold(new BigDecimal("30"));
+        itemInventory2.setStockQuantity(new BigDecimal("5"));
+        itemInventory2.setTotalPrice(new BigDecimal("30"));
+        itemInventoryService.save(itemInventory2);
+
+        itemInventoryServiceImp.checkInventory();
+
     }
 
     private Role createRole(long id, String roleName) {
