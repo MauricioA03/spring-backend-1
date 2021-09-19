@@ -1,31 +1,19 @@
 /**
- * @author: Edson A. Terceros T.
+ * @author: Alex Yerson Gonzales Meneses.
  */
 
-package com.sales.market.model;
+package com.sales.market.dto;
 
-import com.sales.market.dto.InventoryDto;
+import com.sales.market.model.ItemInventory;
+import org.modelmapper.ModelMapper;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
 import java.math.BigDecimal;
 
-@Entity
-public class ItemInventory extends ModelBase<InventoryDto> {
-    @OneToOne
-    private Item item;
+public class InventoryDto extends DtoBase<ItemInventory> {
     private BigDecimal stockQuantity;
     private BigDecimal lowerBoundThreshold;
     private BigDecimal upperBoundThreshold;
     private BigDecimal totalPrice;
-
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
 
     public BigDecimal getStockQuantity() {
         return stockQuantity;
