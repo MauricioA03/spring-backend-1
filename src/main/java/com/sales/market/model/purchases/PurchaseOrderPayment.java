@@ -19,4 +19,36 @@ public class PurchaseOrderPayment extends ModelBase {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private PurchaseOrder purchaseOrder;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getPayAmount() {
+        return payAmount;
+    }
+
+    public void setPayAmount(BigDecimal payAmount) {
+        this.payAmount = payAmount;
+    }
+
+    public PurchaseOrderPaymentKind getPurchaseOrderPaymentKind() {
+        return purchaseOrderPaymentKind;
+    }
+
+    public void setPurchaseOrderPaymentKind(PurchaseOrderPaymentKind purchaseOrderPaymentKind) {
+        this.purchaseOrderPaymentKind = purchaseOrderPaymentKind;
+    }
+
+    public PurchaseOrder getPurchaseOrder() {
+        return purchaseOrder;
+    }
+
+    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+        this.purchaseOrder = purchaseOrder;
+    }
 }

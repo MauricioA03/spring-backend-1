@@ -20,6 +20,54 @@ public class Customer extends ModelBase {
     @Temporal(value = TemporalType.TIMESTAMP)
     private Date lastPurchase;
 
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public Date getFirstPurchase() {
+        return firstPurchase;
+    }
+
+    public void setFirstPurchase(Date firstPurchase) {
+        this.firstPurchase = firstPurchase;
+    }
+
+    public Date getLastPurchase() {
+        return lastPurchase;
+    }
+
+    public void setLastPurchase(Date lastPurchase) {
+        this.lastPurchase = lastPurchase;
+    }
+
+    public Integer getTotalPurchasedProducts() {
+        return totalPurchasedProducts;
+    }
+
+    public void setTotalPurchasedProducts(Integer totalPurchasedProducts) {
+        this.totalPurchasedProducts = totalPurchasedProducts;
+    }
+
+    public BigDecimal getTotalPurchasedAmount() {
+        return totalPurchasedAmount;
+    }
+
+    public void setTotalPurchasedAmount(BigDecimal totalPurchasedAmount) {
+        this.totalPurchasedAmount = totalPurchasedAmount;
+    }
+
+    public List<CustomerDiscount> getDiscounts() {
+        return discounts;
+    }
+
+    public void setDiscounts(List<CustomerDiscount> discounts) {
+        this.discounts = discounts;
+    }
+
     //totalarticulosadquiridos
     private Integer totalPurchasedProducts;
 
