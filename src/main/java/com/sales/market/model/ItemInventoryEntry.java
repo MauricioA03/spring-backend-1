@@ -4,11 +4,13 @@
 
 package com.sales.market.model;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import java.math.BigDecimal;
 
-//@Entity
+@Entity
 public class ItemInventoryEntry extends ModelBase/*<InventoryDto>*/ {
-
+    @OneToOne
     private ItemInventory itemInventory;
     private MovementType movementType;
     private BigDecimal quantity; // represent sale or buy instances quantity
