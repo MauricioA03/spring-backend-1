@@ -20,6 +20,7 @@ target/
 *.ipr
 /.mvn
 
+
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
@@ -33,3 +34,4 @@ build/
 ### VS Code ###
 .vscode/
 
+!/src/main/resources/application.yml
