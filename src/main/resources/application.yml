@@ -4,8 +4,8 @@ spring:
     host: smtp.gmail.com
     #host: m.outlook.com
     port: 587
-    username: diego65757881@gmail.com
-    password: marcelo4350507
+    username: Spotifyspo196@gmail.com
+    password: spotify123
     properties:
       mail:
         smtp:
