@@ -13,5 +13,5 @@ import java.util.Optional;
 
 public interface PurchaseOrderService extends GenericService<PurchaseOrder> {
     PurchaseOrder changeState(Long id, String notes);
-    Optional<List<PurchaseOrder>> orderPurchase(Optional<List<ItemInventory>> items);
+    void orderPurchase(Optional<List<ItemInventory>> items);
 }

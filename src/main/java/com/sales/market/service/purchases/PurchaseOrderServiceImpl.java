@@ -12,10 +12,8 @@ import com.sales.market.service.GenericServiceImpl;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.time.Instant;
+import java.util.*;
 
 @Service
 public class PurchaseOrderServiceImpl extends GenericServiceImpl<PurchaseOrder> implements PurchaseOrderService {
@@ -36,6 +34,7 @@ public class PurchaseOrderServiceImpl extends GenericServiceImpl<PurchaseOrder> 
         return repository;
     }
 
+
     @Override
     public PurchaseOrder changeState(Long id, String notes) {
         PurchaseOrder purchaseOrder = findById(id);
@@ -51,14 +50,30 @@ public class PurchaseOrderServiceImpl extends GenericServiceImpl<PurchaseOrder> 
     }
 
     @Override
-    public Optional<List<PurchaseOrder>> orderPurchase(Optional<List<ItemInventory>> items) {
-        List<PurchaseOrderDetail>orderDetails = getOrderDetails(items);
-
-        return Optional.empty();
+    public void orderPurchase(Optional<List<ItemInventory>> items) {
+        Hashtable<Provider, ArrayList<PurchaseOrderDetail>>orderDetails = getOrderDetails(items);
+        orderDetails.forEach((provider, details) -> createPurchase(provider, details));
     }
 
-    private List<PurchaseOrderDetail> getOrderDetails(Optional<List<ItemInventory>> items){
-        List<PurchaseOrderDetail> orderDetails = new ArrayList<>();
+    private void createPurchase(Provider provider, ArrayList<PurchaseOrderDetail> purchaseOrderDetails){
+        Random rdn = new Random();
+        int value = rdn.nextInt(10000000);
+        PurchaseOrder purchaseOrder = new PurchaseOrder();
+        purchaseOrder.setOrderNumber(String.valueOf(value));
+        purchaseOrder.setDate(Date.from(Instant.now()));
+        purchaseOrder.setState(PurchaseOrderState.APR);
+        purchaseOrder.setReceivedType(PurchaseOrderReceivedType.RP);
+        purchaseOrder.setPaymentStatus(PurchaseOrderPaymentStatus.NO_PAYMENT);
+        purchaseOrder.setTotalAmount(new BigDecimal("100"));
+        purchaseOrder.setBalanceAmount(BigDecimal.ZERO);
+        purchaseOrder.setProviderCode(provider.getCode());
+        purchaseOrder.setProvider(provider);
+        purchaseOrder.setPurchaseOrderDetailList(purchaseOrderDetails);
+        save(purchaseOrder);
+    }
+
+    private Hashtable<Provider, ArrayList<PurchaseOrderDetail>> getOrderDetails(Optional<List<ItemInventory>> items){
+        Hashtable<Provider, ArrayList<PurchaseOrderDetail>> dictionary = new Hashtable<>();
         items.orElse(Collections.emptyList()).forEach(itemInventory -> {
             BigDecimal quantity = itemInventory.getUpperBoundThreshold().subtract(itemInventory.getStockQuantity());
             ProviderItem providerItem = providerItemService.getMinProviderItems(itemInventory.getItem());
@@ -71,9 +86,14 @@ public class PurchaseOrderServiceImpl extends GenericServiceImpl<PurchaseOrder> 
             purchaseOrderDetail.setItemCode(itemInventory.getItem().getCode());
             purchaseOrderDetail.setQuantity(quantity);
 
-            orderDetails.add(purchaseOrderDetail);
+            if (dictionary.containsKey(providerItem.getProvider())){
+                dictionary.get(providerItem.getProvider()).add(purchaseOrderDetail);
+            } else {
+                ArrayList<PurchaseOrderDetail> orders = new ArrayList<>();
+                orders.add(purchaseOrderDetail);
+                dictionary.put(providerItem.getProvider(), orders);
+            }
         });
-
-        return orderDetails;
+        return dictionary;
     }
 }

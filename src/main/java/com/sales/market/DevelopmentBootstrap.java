@@ -118,14 +118,25 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
 
         createItemProvider(provider, maltinItem, measureUnit,"30");
         createItemProvider(provider1, maltinItem, measureUnit,"70");
+        createItemProvider(provider3, maltinItem, measureUnit,"90");
+        createItemProvider(provider4, maltinItem, measureUnit,"100");
 
-        createItemProvider(provider1, maltaItem, measureUnit,"10");
+        createItemProvider(provider1, maltaItem, measureUnit,"90");
+        createItemProvider(provider, maltaItem, measureUnit,"70");
+        createItemProvider(provider2, maltaItem, measureUnit,"120");
 
         createItemProvider(provider2, coronaItem, measureUnit,"70");
+        createItemProvider(provider, coronaItem, measureUnit,"170");
+        createItemProvider(provider5, coronaItem, measureUnit,"20");
 
         createItemProvider(provider3, spriteItem, measureUnit,"30");
+        createItemProvider(provider5, spriteItem, measureUnit,"10");
+        createItemProvider(provider, spriteItem, measureUnit,"70");
 
         createItemProvider(provider4, pepsiItem, measureUnit,"40");
+        createItemProvider(provider5, pepsiItem, measureUnit,"30");
+        createItemProvider(provider, pepsiItem, measureUnit,"20");
+        createItemProvider(provider3, pepsiItem, measureUnit,"10");
 
         createItemProvider(provider5, cocaItem, measureUnit,"50");
 
