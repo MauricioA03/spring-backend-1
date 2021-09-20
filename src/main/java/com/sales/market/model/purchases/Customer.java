@@ -1,6 +1,7 @@
 package com.sales.market.model.purchases;
 
 
+import com.sales.market.dto.purchaseDto.CustomerDto;
 import com.sales.market.model.ModelBase;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-public class Customer extends ModelBase {
+public class Customer extends ModelBase<CustomerDto> {
 
     private String number;
 

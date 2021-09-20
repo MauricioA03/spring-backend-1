@@ -1,5 +1,6 @@
 package com.sales.market.model.purchases;
 
+import com.sales.market.dto.purchaseDto.PurchaseOrderDetailDto;
 import com.sales.market.model.Item;
 import com.sales.market.model.ModelBase;
 
@@ -10,7 +11,7 @@ import javax.persistence.ManyToOne;
 import java.math.BigDecimal;
 
 @Entity
-public class PurchaseOrderDetail extends ModelBase {
+public class PurchaseOrderDetail extends ModelBase<PurchaseOrderDetailDto> {
     @ManyToOne
     private PurchaseOrder purchaseOrder;
 

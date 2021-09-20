@@ -5,7 +5,7 @@ spring:
     #host: m.outlook.com
     port: 587
     username: bazoaltosamuel33@gmail.com
-    password: w2m#perra
+    password:
     properties:
       mail:
         smtp:
