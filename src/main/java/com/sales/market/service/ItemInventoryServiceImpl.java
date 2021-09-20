@@ -14,12 +14,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ItemInventoryServiceImpl extends GenericServiceImpl<ItemInventory> implements ItemInventoryService {
+class ItemInventoryServiceImpl extends GenericServiceImpl<ItemInventory> implements ItemInventoryService {
     private final ItemInventoryRepository repository;
 
     public ItemInventoryServiceImpl(ItemInventoryRepository repository) {
         this.repository = repository;
     }
+
 
     @Override
     protected GenericRepository<ItemInventory> getRepository() {
