@@ -5,10 +5,15 @@
 package com.sales.market;
 
 import com.sales.market.model.*;
+import com.sales.market.model.purchases.MeasureUnit;
 import com.sales.market.model.purchases.Provider;
+import com.sales.market.model.purchases.ProviderItem;
 import com.sales.market.repository.BuyRepository;
 import com.sales.market.repository.EmployeeRepository;
+import com.sales.market.repository.purchases.MeasureUnitRepository;
 import com.sales.market.service.*;
+import com.sales.market.service.purchases.MeasureUnitService;
+import com.sales.market.service.purchases.ProviderItemService;
 import com.sales.market.service.purchases.ProviderService;
 import io.micrometer.core.instrument.util.IOUtils;
 import org.springframework.context.ApplicationListener;
@@ -32,7 +37,10 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
     private final ItemInstanceService itemInstanceService;
     private final ItemInventoryService itemInventoryService;
     private final ProviderService providerService;
+    private final MeasureUnitService measureUnitService;
+    private final ProviderItemService providerItemService;
     private EmployeeRepository employeeRepository;
+    private MeasureUnitRepository measureUnitRepository;
     private UserService userService;
     private RoleService roleService;
 
@@ -42,9 +50,9 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
     // bean pueden tener muchos campos y otros beans asociados
 
 
-    public DevelopmentBootstrap(BuyRepository buyRepository, CategoryService categoryService,
+    public DevelopmentBootstrap(BuyRepository buyRepository, CategoryService categoryService, MeasureUnitRepository measureUnitRepository,
                                 SubCategoryService subCategoryService, ItemService itemService, ItemInstanceService itemInstanceService,
-                                ItemInventoryService itemInventoryService, ProviderService providerService, EmployeeRepository employeeRepository, UserService userService, RoleService roleService) {
+                                ItemInventoryService itemInventoryService, ProviderService providerService, MeasureUnitService measureUnitService, ProviderItemService providerItemService, EmployeeRepository employeeRepository, UserService userService, RoleService roleService) {
         this.buyRepository = buyRepository;
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
@@ -52,9 +60,12 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
         this.itemInstanceService = itemInstanceService;
         this.itemInventoryService = itemInventoryService;
         this.providerService = providerService;
+        this.measureUnitService = measureUnitService;
+        this.providerItemService = providerItemService;
         this.employeeRepository = employeeRepository;
         this.userService = userService;
         this.roleService = roleService;
+        this.measureUnitRepository = measureUnitRepository;
     }
 
     @Override
@@ -95,27 +106,46 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
         createItemInventory(orientalItem, "10", "30", "20", "40");
         createItemInventory(pepsiItem, "10", "30", "8", "40");
 
+        createProviders(maltinItem, 20D);
+        createProviders(maltinItem, 50D);
+        createProviders(maltinItem, 70D);
+        createProviders(maltinItem, 100D);
+        createProviders(cocaItem, 40D);
+        createProviders(maltaItem, 10D);
+        createProviders(coronaItem, 15D);
+        createProviders(spriteItem, 20D);
+        createProviders(orientalItem, 30D);
+        createProviders(pepsiItem, 30D);
+
         initializeRoles();
         initializeEmployees();
-        createProviders();
     }
 
-    private void createProviders() {
+    private void createProviders(Item item, Double price) {
         Provider provider = new Provider();
         provider.setCode("P-Proveedor");
-        provider.setName("1er Proveedor");
+        provider.setName("Proveedor " + item.getName());
         providerService.save(provider);
 
-        Provider provider1 = new Provider();
-        provider1.setCode("P-Proveedor");
-        provider1.setName("1er Proveedor");
-        providerService.save(provider1);
+        MeasureUnit measureUnit = new MeasureUnit();
+        measureUnit.setMeasureUnitCode("M-" + item.getName());
+        measureUnit.setName("Unit-" + item.getName());
+        measureUnit.setDescription("Measure description");
+        measureUnitService.save(measureUnit);
 
-        Provider provider2 = new Provider();
-        provider2.setCode("P-Proveedor");
-        provider2.setName("1er Proveedor");
-        providerService.save(provider2);
+        ProviderItem providerItem = new ProviderItem();
+        providerItem.setItem(item);
+        providerItem.setProvider(provider);
+        providerItem.setMeasureUnit(measureUnit);
+        providerItem.setItemCode(item.getCode());
+        providerItem.setProviderCode(provider.getCode());
+        providerItem.setPrice(price);
+        providerItem.setProviderItemCode("PIC-" + item.getCode() + "-" + provider.getCode());
+        providerItemService.save(providerItem);
+
     }
+
+
 
     private void initializeRoles() {
         createRole(RoleType.ADMIN.getId(), RoleType.ADMIN.getType());

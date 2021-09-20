@@ -1,5 +1,9 @@
 /**
+<<<<<<< HEAD
  * @author: Samuel Bazaolto
+=======
+ * @author: Diego Marcelo Choque Ramirez
+>>>>>>> cbb3058ff93ca81481e924a012cdc9ddf37434f8
  */
 
 package com.sales.market.service.purchases;
@@ -22,4 +26,5 @@ public class ProviderItemServiceImpl extends GenericServiceImpl<ProviderItem> im
     protected GenericRepository<ProviderItem> getRepository() {
         return repository;
     }
+
 }

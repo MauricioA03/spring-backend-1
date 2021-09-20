@@ -1,3 +1,7 @@
+/**
+ * @author: Diego Marcelo Choque Ramirez
+ */
+
 package com.sales.market.service.purchases;
 
 import com.sales.market.model.purchases.MeasureUnit;
