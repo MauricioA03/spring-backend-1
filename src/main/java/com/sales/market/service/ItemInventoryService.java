@@ -6,6 +6,9 @@ package com.sales.market.service;
 
 import com.sales.market.model.ItemInventory;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface ItemInventoryService extends GenericService<ItemInventory> {
-    void checkInventory();
+    Optional<List<ItemInventory>> checkInventory();
 }

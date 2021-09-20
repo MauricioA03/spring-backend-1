@@ -10,17 +10,17 @@ import com.sales.market.model.ItemInventory;
 import java.math.BigDecimal;
 
 public class ItemInventoryDto extends DtoBase<ItemInventory> {
-    private Item item;
+    private ItemDto item;
     private BigDecimal stockQuantity;
     private BigDecimal lowerBoundThreshold;
     private BigDecimal upperBoundThreshold;
     private BigDecimal totalPrice;
 
-    public Item getItem() {
+    public ItemDto getItem() {
         return item;
     }
 
-    public void setItem(Item item) {
+    public void setItem(ItemDto item) {
         this.item = item;
     }
 
