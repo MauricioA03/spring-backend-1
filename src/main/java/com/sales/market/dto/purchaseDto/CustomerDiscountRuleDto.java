@@ -1,36 +1,22 @@
-package com.sales.market.model.purchases;
+package com.sales.market.dto.purchaseDto;
 
+import com.sales.market.dto.DtoBase;
+import com.sales.market.model.purchases.CustomerDiscountRule;
+import com.sales.market.model.purchases.DiscountRuleState;
 
-import com.sales.market.dto.purchaseDto.CustomerDiscountRuleDto;
-import com.sales.market.model.ModelBase;
-
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Entity
-public class CustomerDiscountRule extends ModelBase<CustomerDiscountRuleDto> {
+public class CustomerDiscountRuleDto extends DtoBase<CustomerDiscountRule> {
     private String name;
-
-    @Enumerated(EnumType.STRING)
     private DiscountRuleState discountRuleState;
-
-    @Temporal(TemporalType.TIMESTAMP)
     private Date activationDate = new Date();
-
-    @Temporal(TemporalType.TIMESTAMP)
     private Date expirationDate;
-
-    @Lob
     private String notes;
-
-    @Column(precision = 13, scale = 2, nullable = false)
     private BigDecimal amount;
-
-    @OneToMany(mappedBy = "discountRule")
-    private List<CustomerDiscount> discounts = new ArrayList<CustomerDiscount>(0);
+    private List<CustomerDiscountDto> discounts = new ArrayList<CustomerDiscountDto>(0);
 
     public String getName() {
         return name;
@@ -80,11 +66,11 @@ public class CustomerDiscountRule extends ModelBase<CustomerDiscountRuleDto> {
         this.amount = amount;
     }
 
-    public List<CustomerDiscount> getDiscounts() {
+    public List<CustomerDiscountDto> getDiscounts() {
         return discounts;
     }
 
-    public void setDiscounts(List<CustomerDiscount> discounts) {
+    public void setDiscounts(List<CustomerDiscountDto> discounts) {
         this.discounts = discounts;
     }
 }

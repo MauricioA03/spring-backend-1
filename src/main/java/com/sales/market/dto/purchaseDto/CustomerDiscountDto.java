@@ -1,21 +1,15 @@
-package com.sales.market.model.purchases;
+package com.sales.market.dto.purchaseDto;
 
-import com.sales.market.dto.purchaseDto.CustomerDiscountDto;
-import com.sales.market.model.ModelBase;
+import com.sales.market.dto.DtoBase;
+import com.sales.market.model.purchases.Customer;
+import com.sales.market.model.purchases.CustomerDiscount;
+import com.sales.market.model.purchases.CustomerDiscountRule;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
 
+public class CustomerDiscountDto extends DtoBase<CustomerDiscount> {
 
-@Entity
-public class CustomerDiscount extends ModelBase<CustomerDiscountDto> {
-
-    @ManyToOne
     private CustomerDiscountRule discountRule;
-
-    @ManyToOne
     private Customer customer;
-
     private String discountCode;
 
     public CustomerDiscountRule getDiscountRule() {

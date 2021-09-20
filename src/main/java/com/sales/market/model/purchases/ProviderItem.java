@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import java.math.BigDecimal;
 
 @Entity
 public class ProviderItem extends ModelBase<ProviderItemDto> {
@@ -26,7 +27,8 @@ public class ProviderItem extends ModelBase<ProviderItemDto> {
 
     @OneToOne
     private MeasureUnit measureUnit;
-    private Double price;
+
+    private BigDecimal price;
 
     @ManyToOne
     private Provider provider;
@@ -84,11 +86,11 @@ public class ProviderItem extends ModelBase<ProviderItemDto> {
         this.measureUnit = measureUnit;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 }

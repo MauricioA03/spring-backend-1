@@ -1,25 +1,17 @@
-package com.sales.market.model.purchases;
+package com.sales.market.dto.purchaseDto;
 
-import com.sales.market.dto.purchaseDto.PurchaseOrderPaymentDto;
-import com.sales.market.model.ModelBase;
+import com.sales.market.dto.DtoBase;
+import com.sales.market.model.purchases.PurchaseOrderPayment;
+import com.sales.market.model.purchases.PurchaseOrderPaymentKind;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 
-@Entity
-public class PurchaseOrderPayment extends ModelBase<PurchaseOrderPaymentDto> {
+public class PurchaseOrderPaymentDto extends DtoBase<PurchaseOrderPayment> {
 
     private String description;
-
-    //MONTOPAGO
     private BigDecimal payAmount;
-
-    //CLASEPAGO
-    @Enumerated(EnumType.STRING)
     private PurchaseOrderPaymentKind purchaseOrderPaymentKind;
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private PurchaseOrder purchaseOrder;
+    private PurchaseOrderDto purchaseOrder;
 
     public String getDescription() {
         return description;
@@ -45,11 +37,11 @@ public class PurchaseOrderPayment extends ModelBase<PurchaseOrderPaymentDto> {
         this.purchaseOrderPaymentKind = purchaseOrderPaymentKind;
     }
 
-    public PurchaseOrder getPurchaseOrder() {
+    public PurchaseOrderDto getPurchaseOrder() {
         return purchaseOrder;
     }
 
-    public void setPurchaseOrder(PurchaseOrder purchaseOrder) {
+    public void setPurchaseOrder(PurchaseOrderDto purchaseOrder) {
         this.purchaseOrder = purchaseOrder;
     }
 }

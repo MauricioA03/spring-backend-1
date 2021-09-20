@@ -116,13 +116,18 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
 
         MeasureUnit measureUnit = createMeasureItem("LTS", "Measure unit", "Measure description");
 
-        createItemProvider(provider, maltaItem, measureUnit,2D);
-        createItemProvider(provider1, cocaItem, measureUnit,2D);
-        createItemProvider(provider1, coronaItem, measureUnit,2D);
-        createItemProvider(provider3, coronaItem, measureUnit,2D);
-        createItemProvider(provider2, pepsiItem, measureUnit,2D);
-        createItemProvider(provider4, spriteItem, measureUnit,2D);
-        createItemProvider(provider5, cocaItem, measureUnit,2D);
+        createItemProvider(provider, maltinItem, measureUnit,"30");
+        createItemProvider(provider1, maltinItem, measureUnit,"70");
+
+        createItemProvider(provider1, maltaItem, measureUnit,"10");
+
+        createItemProvider(provider2, coronaItem, measureUnit,"70");
+
+        createItemProvider(provider3, spriteItem, measureUnit,"30");
+
+        createItemProvider(provider4, pepsiItem, measureUnit,"40");
+
+        createItemProvider(provider5, cocaItem, measureUnit,"50");
 
         initializeRoles();
         initializeEmployees();
@@ -137,14 +142,14 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
         return measureUnit;
     }
 
-    private void createItemProvider(Provider provider, Item item, MeasureUnit measureUnit, Double price) {
+    private void createItemProvider(Provider provider, Item item, MeasureUnit measureUnit, String price) {
         ProviderItem providerItem = new ProviderItem();
         providerItem.setItem(item);
         providerItem.setProvider(provider);
         providerItem.setMeasureUnit(measureUnit);
         providerItem.setItemCode(item.getCode());
         providerItem.setProviderCode(provider.getCode());
-        providerItem.setPrice(price);
+        providerItem.setPrice(new BigDecimal(price));
         providerItem.setProviderItemCode("PIC-" + item.getCode() + "-" + provider.getCode());
         providerItemService.save(providerItem);
     }

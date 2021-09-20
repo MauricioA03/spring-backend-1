@@ -1,7 +1,12 @@
-package com.sales.market.model.purchases;
+/**
+ * @author: Diego Marcelo Choque Ramirez
+ */
 
-import com.sales.market.dto.purchaseDto.PurchaseOrderDto;
-import com.sales.market.model.ModelBase;
+package com.sales.market.dto.purchaseDto;
+
+import com.sales.market.dto.DtoBase;
+import com.sales.market.model.purchases.*;
+import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -9,47 +14,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Entity
-public class PurchaseOrder extends ModelBase<PurchaseOrderDto> {
-
-    @Column(unique = true)
+public class PurchaseOrderDto extends DtoBase<PurchaseOrder> {
     private String orderNumber;
-
-    @Temporal(TemporalType.TIMESTAMP)
     private Date date;
-
-    @Enumerated(EnumType.STRING)
     private PurchaseOrderState state;
-
-    @Enumerated(EnumType.STRING)
     private PurchaseOrderReceivedType receivedType;
-
     private String providerCode;
-
-    // es igual a descripcion o comentarios
     private String gloss;
-
-    @Temporal(TemporalType.DATE)
     private Date receptionDate;
-
-    @Column(precision = 16, scale = 2)
     private BigDecimal totalAmount = BigDecimal.ZERO;
-
-    @Transient
-    private PurchaseOrderDetail defaultDetail = new PurchaseOrderDetail();
-
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private Provider provider;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseOrder", cascade = CascadeType.ALL)
-    private List<PurchaseOrderDetail> purchaseOrderDetailList = new ArrayList<PurchaseOrderDetail>(0);
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private PurchaseOrderPaymentStatus paymentStatus;
-
-    @Column(nullable = false, precision = 16, scale = 2)
-    private BigDecimal balanceAmount = BigDecimal.ZERO;
+    private PurchaseOrderDetailDto defaultDetail = new PurchaseOrderDetailDto();
+    private ProviderDto provider;
+    private List<PurchaseOrderDetailDto> purchaseOrderDetailList = new ArrayList<PurchaseOrderDetailDto>(0);
 
     public String getOrderNumber() {
         return orderNumber;
@@ -115,43 +91,27 @@ public class PurchaseOrder extends ModelBase<PurchaseOrderDto> {
         this.totalAmount = totalAmount;
     }
 
-    public PurchaseOrderDetail getDefaultDetail() {
+    public PurchaseOrderDetailDto getDefaultDetail() {
         return defaultDetail;
     }
 
-    public void setDefaultDetail(PurchaseOrderDetail defaultDetail) {
+    public void setDefaultDetail(PurchaseOrderDetailDto defaultDetail) {
         this.defaultDetail = defaultDetail;
     }
 
-    public Provider getProvider() {
+    public ProviderDto getProvider() {
         return provider;
     }
 
-    public void setProvider(Provider provider) {
+    public void setProvider(ProviderDto provider) {
         this.provider = provider;
     }
 
-    public List<PurchaseOrderDetail> getPurchaseOrderDetailList() {
+    public List<PurchaseOrderDetailDto> getPurchaseOrderDetailList() {
         return purchaseOrderDetailList;
     }
 
-    public void setPurchaseOrderDetailList(List<PurchaseOrderDetail> purchaseOrderDetailList) {
+    public void setPurchaseOrderDetailList(List<PurchaseOrderDetailDto> purchaseOrderDetailList) {
         this.purchaseOrderDetailList = purchaseOrderDetailList;
-    }
-
-    public PurchaseOrderPaymentStatus getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(PurchaseOrderPaymentStatus paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
-
-    public BigDecimal getBalanceAmount() {
-        return balanceAmount;
-    }
-
-    public void setBalanceAmount(BigDecimal balanceAmount) {
-        this.balanceAmount = balanceAmount;
     }
 }
