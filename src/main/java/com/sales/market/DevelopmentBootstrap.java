@@ -5,9 +5,11 @@
 package com.sales.market;
 
 import com.sales.market.model.*;
+import com.sales.market.model.purchases.Provider;
 import com.sales.market.repository.BuyRepository;
 import com.sales.market.repository.EmployeeRepository;
 import com.sales.market.service.*;
+import com.sales.market.service.purchases.ProviderService;
 import io.micrometer.core.instrument.util.IOUtils;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -19,6 +21,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 
 @Component
 public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshedEvent> {
@@ -27,6 +30,8 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
     private final SubCategoryService subCategoryService;
     private final ItemService itemService;
     private final ItemInstanceService itemInstanceService;
+    private final ItemInventoryService itemInventoryService;
+    private final ProviderService providerService;
     private EmployeeRepository employeeRepository;
     private UserService userService;
     private RoleService roleService;
@@ -38,13 +43,15 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
 
 
     public DevelopmentBootstrap(BuyRepository buyRepository, CategoryService categoryService,
-            SubCategoryService subCategoryService, ItemService itemService, ItemInstanceService itemInstanceService,
-            EmployeeRepository employeeRepository, UserService userService, RoleService roleService) {
+                                SubCategoryService subCategoryService, ItemService itemService, ItemInstanceService itemInstanceService,
+                                ItemInventoryService itemInventoryService, ProviderService providerService, EmployeeRepository employeeRepository, UserService userService, RoleService roleService) {
         this.buyRepository = buyRepository;
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
         this.itemService = itemService;
         this.itemInstanceService = itemInstanceService;
+        this.itemInventoryService = itemInventoryService;
+        this.providerService = providerService;
         this.employeeRepository = employeeRepository;
         this.userService = userService;
         this.roleService = roleService;
@@ -64,16 +71,66 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
         persistBuy(BigDecimal.TEN);
         persistBuy(BigDecimal.ONE);
         persistCategoriesAndSubCategories();
-        Item maltinItem = persistItems(beverageSubCat);
+        Item maltinItem = persistItems(beverageSubCat, "B-MALTIN", "Maltin");
+        Item cocaItem = persistItems(beverageSubCat, "C-COCACOLA", "Cocacola");
+        Item maltaItem = persistItems(beverageSubCat, "M-MALTA", "Malta");
+        Item coronaItem = persistItems(beverageSubCat, "C-Corona", "Corona");
+        Item spriteItem = persistItems(beverageSubCat, "S-Sprite", "Sprite");
+        Item orientalItem = persistItems(beverageSubCat, "O-Oriental", "Oriental");
+        Item pepsiItem = persistItems(beverageSubCat, "P-Pepsi", "Pepsi");
+
         persistItemInstances(maltinItem);
+        persistItemInstances(cocaItem);
+        persistItemInstances(maltaItem);
+        persistItemInstances(coronaItem);
+        persistItemInstances(spriteItem);
+        persistItemInstances(orientalItem);
+        persistItemInstances(pepsiItem);
+
+        createItemInventory(maltinItem, "10", "30", "8", "40");
+        createItemInventory(cocaItem, "10", "30", "15", "40");
+        createItemInventory(maltaItem, "10", "30", "5", "40");
+        createItemInventory(coronaItem, "10", "30", "1", "40");
+        createItemInventory(spriteItem, "10", "30", "4", "40");
+        createItemInventory(orientalItem, "10", "30", "20", "40");
+        createItemInventory(pepsiItem, "10", "30", "8", "40");
+
         initializeRoles();
         initializeEmployees();
+        createProviders();
+    }
+
+    private void createProviders() {
+        Provider provider = new Provider();
+        provider.setCode("P-Proveedor");
+        provider.setName("1er Proveedor");
+        providerService.save(provider);
+
+        Provider provider1 = new Provider();
+        provider1.setCode("P-Proveedor");
+        provider1.setName("1er Proveedor");
+        providerService.save(provider1);
+
+        Provider provider2 = new Provider();
+        provider2.setCode("P-Proveedor");
+        provider2.setName("1er Proveedor");
+        providerService.save(provider2);
     }
 
     private void initializeRoles() {
         createRole(RoleType.ADMIN.getId(), RoleType.ADMIN.getType());
         createRole(RoleType.GENERAL.getId(), RoleType.GENERAL.getType());
         createRole(RoleType.SUPERVISOR.getId(), RoleType.SUPERVISOR.getType());
+    }
+
+    private void createItemInventory(Item item, String lower, String upper, String quantity, String price) {
+        ItemInventory itemInventory = new ItemInventory();
+        itemInventory.setItem(item);
+        itemInventory.setLowerBoundThreshold(new BigDecimal(lower));
+        itemInventory.setUpperBoundThreshold(new BigDecimal(upper));
+        itemInventory.setStockQuantity(new BigDecimal(quantity));
+        itemInventory.setTotalPrice(new BigDecimal(price));
+        itemInventoryService.save(itemInventory);
     }
 
     private Role createRole(long id, String roleName) {
@@ -120,10 +177,11 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
 
 
     private void persistItemInstances(Item maltinItem) {
-        ItemInstance maltinItem1 = createItem(maltinItem, "SKU-77721106006158", 5D);
-        ItemInstance maltinItem2 = createItem(maltinItem, "SKU-77721106006159", 5D);
-        ItemInstance maltinItem3 = createItem(maltinItem, "SKU-77721106006160", 5D);
-        ItemInstance maltinItem4 = createItem(maltinItem, "SKU-77721106006161", 5D);
+        Random rdn = new Random();
+        ItemInstance maltinItem1 = createItem(maltinItem, "SKU-" + String.valueOf(rdn.nextInt(10000000)), 5D);
+        ItemInstance maltinItem2 = createItem(maltinItem, "SKU-" + String.valueOf(rdn.nextInt(10000000)), 5D);
+        ItemInstance maltinItem3 = createItem(maltinItem, "SKU-"+ String.valueOf(rdn.nextInt(10000000)), 5D);
+        ItemInstance maltinItem4 = createItem(maltinItem, "SKU-" + String.valueOf(rdn.nextInt(10000000)), 5D);
         itemInstanceService.save(maltinItem1);
         itemInstanceService.save(maltinItem2);
         itemInstanceService.save(maltinItem3);
@@ -139,10 +197,10 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
         return itemInstance;
     }
 
-    private Item persistItems(SubCategory subCategory) {
+    private Item persistItems(SubCategory subCategory, String code, String name) {
         Item item = new Item();
-        item.setCode("B-MALTIN");
-        item.setName("MALTIN");
+        item.setCode(code);
+        item.setName(name);
         item.setSubCategory(subCategory);
         /*try {
             item.setImage(ImageUtils.inputStreamToByteArray(getResourceAsStream("/images/maltin.jpg")));

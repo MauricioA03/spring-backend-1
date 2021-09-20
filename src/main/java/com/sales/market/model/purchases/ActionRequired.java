@@ -6,7 +6,12 @@ package com.sales.market.model.purchases;
 
 import com.sales.market.model.ModelBase;
 
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
+
+@Entity
 public class ActionRequired extends ModelBase {
+    @OneToOne
     private PurchaseOrder purchaseOrder;
     private String notes;
 
