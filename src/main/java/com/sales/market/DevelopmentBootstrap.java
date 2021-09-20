@@ -85,10 +85,10 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
         Item maltinItem = persistItems(beverageSubCat, "B-MALTIN", "Maltin");
         Item cocaItem = persistItems(beverageSubCat, "C-COCACOLA", "Cocacola");
         Item maltaItem = persistItems(beverageSubCat, "M-MALTA", "Malta");
-        Item coronaItem = persistItems(beverageSubCat, "C-Corona", "Corona");
-        Item spriteItem = persistItems(beverageSubCat, "S-Sprite", "Sprite");
-        Item orientalItem = persistItems(beverageSubCat, "O-Oriental", "Oriental");
-        Item pepsiItem = persistItems(beverageSubCat, "P-Pepsi", "Pepsi");
+        Item coronaItem = persistItems(beverageSubCat, "C-CORONA", "Corona");
+        Item spriteItem = persistItems(beverageSubCat, "S-SPRITE", "Sprite");
+        Item orientalItem = persistItems(beverageSubCat, "O-ORIENTAL", "Oriental");
+        Item pepsiItem = persistItems(beverageSubCat, "P-PEPSI", "Pepsi");
 
         persistItemInstances(maltinItem);
         persistItemInstances(cocaItem);
@@ -106,33 +106,38 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
         createItemInventory(orientalItem, "10", "30", "20", "40");
         createItemInventory(pepsiItem, "10", "30", "8", "40");
 
-        createProviders(maltinItem, 20D);
-        createProviders(maltinItem, 50D);
-        createProviders(maltinItem, 70D);
-        createProviders(maltinItem, 100D);
-        createProviders(cocaItem, 40D);
-        createProviders(maltaItem, 10D);
-        createProviders(coronaItem, 15D);
-        createProviders(spriteItem, 20D);
-        createProviders(orientalItem, 30D);
-        createProviders(pepsiItem, 30D);
+        Provider provider = createProvider();
+        Provider provider1 = createProvider();
+        Provider provider2 = createProvider();
+        Provider provider3 = createProvider();
+        Provider provider4 = createProvider();
+        Provider provider5 = createProvider();
+        Provider provider6 = createProvider();
+
+        MeasureUnit measureUnit = createMeasureItem("LTS", "Measure unit", "Measure description");
+
+        createItemProvider(provider, maltaItem, measureUnit,2D);
+        createItemProvider(provider1, cocaItem, measureUnit,2D);
+        createItemProvider(provider1, coronaItem, measureUnit,2D);
+        createItemProvider(provider3, coronaItem, measureUnit,2D);
+        createItemProvider(provider2, pepsiItem, measureUnit,2D);
+        createItemProvider(provider4, spriteItem, measureUnit,2D);
+        createItemProvider(provider5, cocaItem, measureUnit,2D);
 
         initializeRoles();
         initializeEmployees();
     }
 
-    private void createProviders(Item item, Double price) {
-        Provider provider = new Provider();
-        provider.setCode("P-Proveedor");
-        provider.setName("Proveedor " + item.getName());
-        providerService.save(provider);
-
+    private MeasureUnit createMeasureItem(String code, String name, String description){
         MeasureUnit measureUnit = new MeasureUnit();
-        measureUnit.setMeasureUnitCode("M-" + item.getName());
-        measureUnit.setName("Unit-" + item.getName());
-        measureUnit.setDescription("Measure description");
+        measureUnit.setMeasureUnitCode(code);
+        measureUnit.setName(name);
+        measureUnit.setDescription(description);
         measureUnitService.save(measureUnit);
+        return measureUnit;
+    }
 
+    private void createItemProvider(Provider provider, Item item, MeasureUnit measureUnit, Double price) {
         ProviderItem providerItem = new ProviderItem();
         providerItem.setItem(item);
         providerItem.setProvider(provider);
@@ -142,10 +147,17 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
         providerItem.setPrice(price);
         providerItem.setProviderItemCode("PIC-" + item.getCode() + "-" + provider.getCode());
         providerItemService.save(providerItem);
-
     }
 
-
+    private Provider createProvider() {
+        Random rdn = new Random();
+        int value = rdn.nextInt(10);
+        Provider provider = new Provider();
+        provider.setCode("P-" + value);
+        provider.setName("Proveedor" + value);
+        providerService.save(provider);
+        return provider;
+    }
 
     private void initializeRoles() {
         createRole(RoleType.ADMIN.getId(), RoleType.ADMIN.getType());
