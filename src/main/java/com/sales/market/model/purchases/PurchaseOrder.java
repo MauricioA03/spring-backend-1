@@ -1,6 +1,5 @@
 package com.sales.market.model.purchases;
 
-import com.sales.market.dto.purchaseDto.PurchaseOrderDto;
 import com.sales.market.model.ModelBase;
 
 import javax.persistence.*;
