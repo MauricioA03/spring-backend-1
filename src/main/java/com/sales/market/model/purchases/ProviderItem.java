@@ -15,27 +15,24 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class ProviderItem extends ModelBase<ProviderItemDto> {
-    @ManyToOne
-    @JoinColumn(name = "provider_id", insertable = false, updatable = false)
-    private Provider provider;
-
     //codigo con el que el proveedor conoce al item
     private String providerItemCode;
 
     //facilitara los queries
     private String providerCode;
 
-    @ManyToOne
-    @JoinColumn(name = "item_id", insertable = false, updatable = false)
-    private Item item;
-
     //facilitara los queries
     private String itemCode;
 
     @OneToOne
     private MeasureUnit measureUnit;
-
     private Double price;
+
+    @ManyToOne
+    private Provider provider;
+
+    @ManyToOne
+    private Item item;
 
     public void setProvider(Provider provider) {
         this.provider = provider;

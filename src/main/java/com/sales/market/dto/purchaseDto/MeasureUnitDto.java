@@ -1,15 +1,15 @@
+/**
+ * @author: Diego Marcelo Choque Ramirez
+ */
+
 package com.sales.market.dto.purchaseDto;
 
 import com.sales.market.dto.DtoBase;
 import com.sales.market.model.purchases.MeasureUnit;
 
-
 public class MeasureUnitDto extends DtoBase<MeasureUnit> {
-
     private String measureUnitCode;
-
     private String name;
-
     private String description;
 
     public String getMeasureUnitCode() {

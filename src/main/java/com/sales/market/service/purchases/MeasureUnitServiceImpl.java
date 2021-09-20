@@ -1,3 +1,7 @@
+/**
+ * @author: Diego Marcelo Choque Ramirez
+ */
+
 package com.sales.market.service.purchases;
 
 import com.sales.market.model.purchases.MeasureUnit;
@@ -6,9 +10,8 @@ import com.sales.market.repository.purchases.MeasureUnitRepository;
 import com.sales.market.service.GenericServiceImpl;
 import org.springframework.stereotype.Service;
 
-
 @Service
-public class MeasureUnitServiceImpl extends GenericServiceImpl<MeasureUnit> {
+public class MeasureUnitServiceImpl extends GenericServiceImpl<MeasureUnit> implements MeasureUnitService {
     private final MeasureUnitRepository repository;
 
     public MeasureUnitServiceImpl(MeasureUnitRepository repository) {
