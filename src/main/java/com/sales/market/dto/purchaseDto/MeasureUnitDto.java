@@ -1,17 +1,15 @@
-package com.sales.market.model.purchases;
+/**
+ * @author: Diego Marcelo Choque Ramirez
+ */
 
-import com.sales.market.dto.purchaseDto.MeasureUnitDto;
-import com.sales.market.model.ModelBase;
+package com.sales.market.dto.purchaseDto;
 
-import javax.persistence.Entity;
+import com.sales.market.dto.DtoBase;
+import com.sales.market.model.purchases.MeasureUnit;
 
-@Entity
-public class MeasureUnit extends ModelBase<MeasureUnitDto> {
-
+public class MeasureUnitDto extends DtoBase<MeasureUnit> {
     private String measureUnitCode;
-
     private String name;
-
     private String description;
 
     public String getMeasureUnitCode() {
