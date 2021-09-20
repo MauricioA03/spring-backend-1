@@ -1,5 +1,6 @@
 package com.sales.market.model.purchases;
 
+import com.sales.market.dto.purchaseDto.PurchaseOrderDto;
 import com.sales.market.model.ModelBase;
 
 import javax.persistence.*;
@@ -9,8 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-public class PurchaseOrder extends ModelBase {
+public class PurchaseOrder extends ModelBase<PurchaseOrderDto> {
 
+    @Column(unique = true)
     private String orderNumber;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -41,6 +43,7 @@ public class PurchaseOrder extends ModelBase {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "purchaseOrder", cascade = CascadeType.ALL)
 
+//    @OrderBy("orderNumber asc")
     private List<PurchaseOrderDetail> purchaseOrderDetailList = new ArrayList<PurchaseOrderDetail>(0);
 
     @Column(nullable = false)

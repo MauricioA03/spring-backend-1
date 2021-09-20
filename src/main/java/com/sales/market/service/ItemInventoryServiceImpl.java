@@ -9,13 +9,18 @@ import com.sales.market.repository.GenericRepository;
 import com.sales.market.repository.ItemInventoryRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 @Service
-public class ItemInventoryServiceImpl extends GenericServiceImpl<ItemInventory> implements ItemInventoryService {
+class ItemInventoryServiceImpl extends GenericServiceImpl<ItemInventory> implements ItemInventoryService {
     private final ItemInventoryRepository repository;
 
     public ItemInventoryServiceImpl(ItemInventoryRepository repository) {
         this.repository = repository;
     }
+
 
     @Override
     protected GenericRepository<ItemInventory> getRepository() {
@@ -24,9 +29,7 @@ public class ItemInventoryServiceImpl extends GenericServiceImpl<ItemInventory> 
 
 
     @Override
-    public void checkInventory() {
-        for (ItemInventory item : repository.getMinItemInventories()) {
-            System.out.println(item.getItem().getName() + " itemInventory");
-        }
+    public Optional<List<ItemInventory>> checkInventory() {
+        return repository.getMinItemInventories();
     }
 }

@@ -35,7 +35,7 @@ public class UserController extends GenericController<User, UserDto> {
     private final AuthenticationManager authenticationManager;
 
     public UserController(UserService userService, TokenService tokenService, EmailService emailService,
-            AuthenticationManager authenticationManager) {
+                          AuthenticationManager authenticationManager) {
         this.userService = userService;
         this.tokenService = tokenService;
         this.emailService = emailService;
@@ -100,7 +100,7 @@ public class UserController extends GenericController<User, UserDto> {
 
     @PostMapping("sendSignUpInvitation")
     public ResponseEntity<Object> inviteNewUser(@Valid @RequestBody UserDto user,
-            @RequestParam("redirect") String redirect)
+                                                @RequestParam("redirect") String redirect)
             throws JsonProcessingException {
         Map<String, Object> parameters = new HashMap<>();
         String[] to = {user.getEmail()};
@@ -112,7 +112,7 @@ public class UserController extends GenericController<User, UserDto> {
 
     @PostMapping("/forgottenPassword")
     public ResponseEntity<Object> sendForgottenPasswordEmail(@Valid @RequestBody UserDto user,
-            @RequestParam("redirect") String redirect)
+                                                             @RequestParam("redirect") String redirect)
             throws JsonProcessingException {
         ResponseEntity<Object> responseEntity = null;
         if (userService.isUserRegistered(user.getEmail())) {
@@ -151,8 +151,8 @@ public class UserController extends GenericController<User, UserDto> {
 
     @GetMapping("/users")
     public Page<UserDto> findPaginatedUsers(@RequestParam("page") int page, @RequestParam("size") int size,
-            @RequestParam("filter") String filter,
-            @RequestParam("isAsc") boolean isAsc) {
+                                            @RequestParam("filter") String filter,
+                                            @RequestParam("isAsc") boolean isAsc) {
         Page<UserDto> paginatedResults = userService
                 .findUsers(PageRequest.of(page - 1, size, super.getSortType(isAsc, filter))).map(this::toDto);
         return paginatedResults;

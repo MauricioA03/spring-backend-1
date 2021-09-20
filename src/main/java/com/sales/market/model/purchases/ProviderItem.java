@@ -4,6 +4,7 @@
 
 package com.sales.market.model.purchases;
 
+import com.sales.market.dto.purchaseDto.ProviderItemDto;
 import com.sales.market.model.Item;
 import com.sales.market.model.ModelBase;
 
@@ -13,7 +14,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 @Entity
-public class ProviderItem extends ModelBase {
+public class ProviderItem extends ModelBase<ProviderItemDto> {
     @ManyToOne
     @JoinColumn(name = "provider_id", insertable = false, updatable = false)
     private Provider provider;
