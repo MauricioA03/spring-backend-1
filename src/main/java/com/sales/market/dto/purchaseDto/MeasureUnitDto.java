@@ -1,12 +1,10 @@
-package com.sales.market.model.purchases;
+package com.sales.market.dto.purchaseDto;
 
-import com.sales.market.dto.purchaseDto.MeasureUnitDto;
-import com.sales.market.model.ModelBase;
+import com.sales.market.dto.DtoBase;
+import com.sales.market.model.purchases.MeasureUnit;
 
-import javax.persistence.Entity;
 
-@Entity
-public class MeasureUnit extends ModelBase<MeasureUnitDto> {
+public class MeasureUnitDto extends DtoBase<MeasureUnit> {
 
     private String measureUnitCode;
 
