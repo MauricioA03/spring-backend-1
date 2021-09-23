@@ -17,15 +17,8 @@ public class ItemInstance extends ModelBase<ItemInstanceDto> {
     @OneToOne
     private Item item;
     private String identifier;// sku
-
     private Boolean featured = Boolean.FALSE;
-
-    // todo generalmente se usa BigDecimal
     private Double price;
-    // todo estados AVAILABLE, SOLD, MAINTENANCE, ON_TRANSPORTATION
-    // private ItemInstanceState itemInstanceState;
-    // todo agregar totalCost
-
     private ItemInstanceStatus itemInstanceStatus;
 
     public Item getItem() {
@@ -60,10 +53,11 @@ public class ItemInstance extends ModelBase<ItemInstanceDto> {
         this.featured = featured;
     }
 
-    /*@Override
-    public ModelBase toDomain(ItemInstanceDto element, ModelMapper mapper) {
-        super.toDomain(element, mapper);
-        setItem((Item) new Item().toDomain(element.getItemDto(), mapper));
-        return this;
-    }*/
+    public ItemInstanceStatus getItemInstanceStatus() {
+        return itemInstanceStatus;
+    }
+
+    public void setItemInstanceStatus(ItemInstanceStatus itemInstanceStatus) {
+        this.itemInstanceStatus = itemInstanceStatus;
+    }
 }
