@@ -13,7 +13,7 @@ import java.util.List;
 public interface ItemInstanceService extends GenericService<ItemInstance> {
     List<ItemInstance> getItemInstanceByItemAndEqualStatus(Item item, ItemInstanceStatus itemInstanceStatus);
 
-    void setStateAll(String itemInstanceSkus, ItemInstanceStatus screwed);
+    void setStateAll(String itemInstanceSkus, ItemInstanceStatus status);
 
     void saveAllItemBySkus(String itemInstanceSkus, Item item);
 

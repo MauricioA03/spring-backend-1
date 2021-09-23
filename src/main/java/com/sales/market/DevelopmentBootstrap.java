@@ -8,38 +8,36 @@ import com.sales.market.model.*;
 import com.sales.market.repository.BuyRepository;
 import com.sales.market.repository.EmployeeRepository;
 import com.sales.market.service.*;
-import io.micrometer.core.instrument.util.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+
+import static com.sales.market.model.ItemInstanceStatus.AVAILABLE;
 
 @Component
 public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshedEvent> {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private final BuyRepository buyRepository;
     private final CategoryService categoryService;
     private final SubCategoryService subCategoryService;
     private final ItemService itemService;
     private final ItemInstanceService itemInstanceService;
-    private EmployeeRepository employeeRepository;
-    private UserService userService;
-    private RoleService roleService;
+    private final EmployeeRepository employeeRepository;
+    private final UserService userService;
+    private final RoleService roleService;
+    private final ItemInventoryService itemInventoryService;
 
     SubCategory beverageSubCat = null;
 
-    // injeccion evita hacer instancia   = new Clase();
-    // bean pueden tener muchos campos y otros beans asociados
-
-
     public DevelopmentBootstrap(BuyRepository buyRepository, CategoryService categoryService,
-            SubCategoryService subCategoryService, ItemService itemService, ItemInstanceService itemInstanceService,
-            EmployeeRepository employeeRepository, UserService userService, RoleService roleService) {
+                                SubCategoryService subCategoryService, ItemService itemService, ItemInstanceService itemInstanceService,
+                                EmployeeRepository employeeRepository, UserService userService, RoleService roleService, ItemInventoryService itemInventoryService) {
         this.buyRepository = buyRepository;
         this.categoryService = categoryService;
         this.subCategoryService = subCategoryService;
@@ -48,26 +46,34 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
         this.employeeRepository = employeeRepository;
         this.userService = userService;
         this.roleService = roleService;
+        this.itemInventoryService = itemInventoryService;
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-        System.out.println("evento de spring");
-        /*   duplicacion de codigo
-        Buy buy = new Buy();
-        buy.setValue(BigDecimal.TEN);
-        buyRespository.save(buy);
-        Buy buy2 = new Buy();
-        buy2.setValue(BigDecimal.ONE);
-        buyRespository.save(buy);*/
-
-        persistBuy(BigDecimal.TEN);
-        persistBuy(BigDecimal.ONE);
+        this.logger.info("The seeds will be inserted");
         persistCategoriesAndSubCategories();
-        Item maltinItem = persistItems(beverageSubCat);
-        persistItemInstances(maltinItem);
+        persistItemsAndItemInstances();
         initializeRoles();
         initializeEmployees();
+    }
+
+    private void persistItemsAndItemInstances() {
+        List<Item> itemsToPersist = persistItems();
+        for (Item item : itemsToPersist) {
+            persistItemInstances(item);
+        }
+        persistItemInventory(itemsToPersist);
+    }
+
+    private void persistItemInventory(List<Item> itemsToPersist) {
+        for (Item item : itemsToPersist) {
+            ItemInventory itemInventory = new ItemInventory();
+            itemInventory.setItem(item);
+            itemInventory.setLowerBoundThreshold(new BigDecimal("1"));
+            itemInventory.setUpperBoundThreshold(new BigDecimal("10"));
+            itemInventoryService.save(itemInventory);
+        }
     }
 
     private void initializeRoles() {
@@ -119,65 +125,50 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
     }
 
 
-    private void persistItemInstances(Item maltinItem) {
-        ItemInstance maltinItem1 = createItem(maltinItem, "SKU-77721106006158", 5D);
-        ItemInstance maltinItem2 = createItem(maltinItem, "SKU-77721106006159", 5D);
-        ItemInstance maltinItem3 = createItem(maltinItem, "SKU-77721106006160", 5D);
-        ItemInstance maltinItem4 = createItem(maltinItem, "SKU-77721106006161", 5D);
-        itemInstanceService.save(maltinItem1);
-        itemInstanceService.save(maltinItem2);
-        itemInstanceService.save(maltinItem3);
-        itemInstanceService.save(maltinItem4);
+    private void persistItemInstances(Item item) {
+        for (int i = 0; i < 5; i++) {
+            ItemInstance itemInstance = createItemInstance(item, "SKU-"+item.getId()+"0000"+i, 10D, AVAILABLE);
+            itemInstanceService.save(itemInstance);
+        }
     }
 
-    private ItemInstance createItem(Item maltinItem, String sku, double price) {
+    private ItemInstance createItemInstance(Item item, String sku, double price, ItemInstanceStatus itemInstanceStatus) {
         ItemInstance itemInstance = new ItemInstance();
-        itemInstance.setItem(maltinItem);
+        itemInstance.setItem(item);
         itemInstance.setFeatured(true);
         itemInstance.setPrice(price);
         itemInstance.setIdentifier(sku);
+        itemInstance.setItemInstanceStatus(itemInstanceStatus);
         return itemInstance;
     }
 
-    private Item persistItems(SubCategory subCategory) {
+    private List<Item> persistItems(){
+        List<Item> itemList = new LinkedList<>();
+        itemList.add(persistItem(beverageSubCat, "POWERADE", "POWERADE-CODE"));
+        itemList.add(persistItem(beverageSubCat, "GATORADE", "GATORADE-CODE"));
+        itemList.add(persistItem(beverageSubCat, "MONSTER", "MONSTER-CODE"));
+        itemList.add(persistItem(beverageSubCat, "BURN", "BURN-CODE"));
+        return itemList;
+    }
+
+    private Item persistItem(SubCategory subCategory, String name, String code) {
         Item item = new Item();
-        item.setCode("B-MALTIN");
-        item.setName("MALTIN");
+        item.setCode(code);
+        item.setName(name);
         item.setSubCategory(subCategory);
-        /*try {
-            item.setImage(ImageUtils.inputStreamToByteArray(getResourceAsStream("/images/maltin.jpg")));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
         return itemService.save(item);
     }
 
-    private String getResourceAsString(String resourceName) {
-        try (InputStream inputStream = this.getClass().getResourceAsStream(resourceName)) {
-            return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-    private InputStream getResourceAsStream(String resourceName) {
-        try (InputStream inputStream = this.getClass().getResourceAsStream(resourceName)) {
-            return inputStream;
-        } catch (IOException e) {
-            throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
     private void persistCategoriesAndSubCategories() {
-        Category category = persistCategory();
-        persistSubCategory("SUBCAT1-NAME", "SUBCAT1-CODE", category);
-        beverageSubCat = persistSubCategory("BEVERAGE", "BEVERAGE-CODE", category);
+        Category category = persistCategory("BEVERAGE","BEVERAGE-CODE");
+        persistSubCategory("JUICE", "JUICE-CODE", category);
+        beverageSubCat = persistSubCategory("ENERGIZERS", "ENERGIZERS-CODE", category);
     }
 
-    private Category persistCategory() {
+    private Category persistCategory(String name, String code) {
         Category category = new Category();
-        category.setName("CAT1-NAME");
-        category.setCode("CAT1-CODE");
+        category.setName(name);
+        category.setCode(code);
         return categoryService.save(category);
     }
 
@@ -187,11 +178,5 @@ public class DevelopmentBootstrap implements ApplicationListener<ContextRefreshe
         subCategory.setCode(code);
         subCategory.setCategory(category);
         return subCategoryService.save(subCategory);
-    }
-
-    private void persistBuy(BigDecimal value) {
-        Buy buy = new Buy();
-        buy.setValue(value);
-        buyRepository.save(buy);
     }
 }
